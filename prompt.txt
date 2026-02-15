@@ -1,0 +1,84 @@
+Build a scalable full-stack UAE rental marketplace focused on rooms and apartments in Dubai.
+
+Tech stack:
+
+* Next.js 14 (App Router)
+* TypeScript
+* Tailwind CSS
+* Supabase (PostgreSQL, Auth, Storage)
+* Vercel deployment ready
+* Mobile-first responsive design
+* SEO optimized
+
+Core features:
+
+1. Authentication
+
+* Email/password login and signup
+* Google OAuth
+* Protected dashboard
+* User profile
+
+2. Listings
+
+* Create, edit, delete property listings
+* Property types: room, apartment
+* Price, location, furnished, bedrooms, bathrooms
+* Multiple image upload using Supabase Storage
+* Status: active, hidden
+
+3. Search and filters
+
+* Filter by price range
+* Area
+* Property type
+* Bedrooms
+* Furnished
+* Sorting: newest, price low to high, high to low
+* Query params for SEO
+
+4. UI/UX
+
+* Clean modern design
+* Airbnb style cards
+* Sticky navbar
+* Filter sidebar
+* Mobile bottom filter drawer
+* Loading states
+* Error and empty states
+
+5. Dashboard
+
+* My listings
+* Saved listings
+* Profile settings
+
+6. Mortgage calculator
+
+* EMI calculation
+* Save leads
+
+7. SEO
+
+* Dynamic metadata
+* OpenGraph tags
+* Listing slug URLs
+
+8. Performance
+
+* Pagination
+* Lazy loading
+* Optimized images
+
+9. Security
+
+* Supabase Row Level Security
+* Owner-only listing updates
+
+Deliver:
+
+* Clean folder structure
+* Working CRUD
+* Supabase schema and setup
+* Environment variables
+* README setup guide
