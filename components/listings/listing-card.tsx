@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Listing } from "@/types/database";
 import { getPublicUrlFromFullPath } from "@/lib/listings/storage";
 import { SaveButton } from "./save-button";
+import { TrustBadges } from "./trust-badges";
 
 type ListingCardProps = {
   listing: Listing;
@@ -29,6 +30,7 @@ export function ListingCard({ listing, isOwner, savedListingIds }: ListingCardPr
           <img
             src={displayUrl}
             alt=""
+            loading="lazy"
             className="h-full w-full object-cover transition-transform group-hover:scale-[1.02]"
           />
         ) : (
@@ -66,10 +68,19 @@ export function ListingCard({ listing, isOwner, savedListingIds }: ListingCardPr
         <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
           {listing.area}
         </p>
+        <div className="mt-2">
+          <TrustBadges verifiedListing={listing.verified_listing} compact />
+        </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-zinc-500 dark:text-zinc-500">
           <span>{listing.bedrooms} bed</span>
           <span>{listing.bathrooms} bath</span>
           {listing.furnished && <span>Furnished</span>}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <span>{listing.views_count} views</span>
+          <span>{listing.saved_count} saved</span>
+          <span>{listing.contacted_count} contacted</span>
+          {listing.views_count > 50 && <span>Trending</span>}
         </div>
         <p className="mt-2 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
           AED {Number(listing.price).toLocaleString()}

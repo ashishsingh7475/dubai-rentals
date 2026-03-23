@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Lead } from "@/types/database";
+import { incrementContactedCount } from "@/app/actions/trust";
 
 export interface CreateLeadInput {
   listingId: string;
@@ -45,6 +46,7 @@ export async function createLead(input: CreateLeadInput) {
   });
 
   if (error) return { error: error.message };
+  await incrementContactedCount(listingId);
   revalidatePath("/dashboard/leads");
   return { error: null };
 }

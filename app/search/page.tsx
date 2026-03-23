@@ -10,7 +10,7 @@ import { FilterSidebar } from "@/components/search/filter-sidebar";
 import { FilterDrawer } from "@/components/search/filter-drawer";
 import { SortSelect } from "@/components/search/sort-select";
 import { SearchEmpty } from "@/components/search/search-empty";
-import type { SearchParams } from "@/types/search";
+import { getTrustSignals } from "@/app/actions/trust";
 
 export const metadata = {
   title: "Search Rentals | Dubai Rentals",
@@ -24,9 +24,10 @@ async function SearchContent({
 }) {
   const raw = await searchParams;
   const params = parseSearchParams(raw);
-  const [result, savedListingIds] = await Promise.all([
+  const [result, savedListingIds, trustSignals] = await Promise.all([
     searchListings(params),
     getSavedListingIds(),
+    getTrustSignals(),
   ]);
 
   const hasFilters =
@@ -41,6 +42,20 @@ async function SearchContent({
     <>
       <SearchHeader />
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      <div className="mb-6 grid gap-4 rounded-2xl bg-gradient-to-r from-zinc-900 to-zinc-700 p-5 text-white shadow-sm md:grid-cols-3">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-zinc-300">Recently listed</p>
+          <p className="mt-1 text-sm">{trustSignals.recentlyListed.length} new homes</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wide text-zinc-300">Most viewed</p>
+          <p className="mt-1 text-sm">{trustSignals.mostViewed.length} trending this week</p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-wide text-zinc-300">Popular in this area</p>
+          <p className="mt-1 text-sm">{trustSignals.popularArea ?? "Across Dubai"}</p>
+        </div>
+      </div>
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">

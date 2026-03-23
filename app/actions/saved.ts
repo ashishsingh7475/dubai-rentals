@@ -20,6 +20,15 @@ export async function saveListing(listingId: string) {
     if (error.code === "23505") return { error: null }; // unique violation = already saved
     return { error: error.message };
   }
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("saved_count")
+    .eq("id", listingId)
+    .single();
+  await supabase
+    .from("listings")
+    .update({ saved_count: Number(listing?.saved_count ?? 0) + 1 })
+    .eq("id", listingId);
   revalidatePath("/search");
   revalidatePath("/listings/[id]", "page");
   revalidatePath("/dashboard/saved");
@@ -40,6 +49,15 @@ export async function unsaveListing(listingId: string) {
     .eq("listing_id", listingId);
 
   if (error) return { error: error.message };
+  const { data: listing } = await supabase
+    .from("listings")
+    .select("saved_count")
+    .eq("id", listingId)
+    .single();
+  await supabase
+    .from("listings")
+    .update({ saved_count: Math.max(0, Number(listing?.saved_count ?? 0) - 1) })
+    .eq("id", listingId);
   revalidatePath("/search");
   revalidatePath("/listings/[id]", "page");
   revalidatePath("/dashboard/saved");

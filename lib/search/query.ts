@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Listing } from "@/types/database";
 import type { SearchParams, SortOption } from "@/types/search";
@@ -11,7 +12,7 @@ export interface SearchResult {
   totalPages: number;
 }
 
-export async function searchListings(
+export const searchListings = unstable_cache(async function searchListings(
   params: SearchParams = {}
 ): Promise<SearchResult> {
   const supabase = await createClient();
@@ -19,9 +20,13 @@ export async function searchListings(
 
   let query = supabase
     .from("listings")
-    .select("id, title, description, price, property_type, area, bedrooms, bathrooms, furnished, image_urls, user_id, created_at, updated_at", {
+    .select(
+      "id, title, description, price, property_type, area, bedrooms, bathrooms, furnished, image_urls, user_id, owner_phone, owner_whatsapp, verified_listing, verification_notes, status, views_count, saved_count, contacted_count, reported_count, most_recent_view_at, created_at, updated_at",
+      {
       count: "exact",
-    });
+    }
+    )
+    .in("status", ["active", "flagged"]);
 
   // Price filters
   if (params.minPrice != null && params.minPrice > 0) {
@@ -90,4 +95,4 @@ export async function searchListings(
     page,
     totalPages,
   };
-}
+}, ["search-listings-cache"], { revalidate: 60 });

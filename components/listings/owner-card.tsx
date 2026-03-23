@@ -1,17 +1,26 @@
 "use client";
 
 import { ContactForm } from "./contact-form";
+import type { OwnerProfile } from "@/types/database";
+import Link from "next/link";
+import { TrustBadges } from "./trust-badges";
 
 type OwnerCardProps = {
   listingId: string;
   listingTitle: string;
   showContactForm?: boolean;
+  ownerId?: string;
+  ownerName?: string;
+  ownerProfile?: OwnerProfile | null;
 };
 
 export function OwnerCard({
   listingId,
   listingTitle,
   showContactForm = true,
+  ownerId,
+  ownerName,
+  ownerProfile,
 }: OwnerCardProps) {
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
@@ -33,12 +42,20 @@ export function OwnerCard({
         </div>
         <div>
           <h3 className="font-semibold text-zinc-900 dark:text-zinc-50">
-            Property owner
+            {ownerName || "Property owner"}
           </h3>
           <p className="mt-0.5 text-sm text-zinc-600 dark:text-zinc-400">
             Listed on Dubai Rentals
           </p>
+          {ownerId && (
+            <Link href={`/owners/${ownerId}`} className="mt-1 inline-block text-xs text-foreground hover:underline">
+              View public profile
+            </Link>
+          )}
         </div>
+      </div>
+      <div className="mt-3">
+        <TrustBadges verifiedListing={false} ownerProfile={ownerProfile} compact />
       </div>
       {showContactForm && (
         <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">

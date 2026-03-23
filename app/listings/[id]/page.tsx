@@ -8,6 +8,11 @@ import { ListingImageGallery } from "@/components/listings/listing-image-gallery
 import { ListingHighlights } from "@/components/listings/listing-highlights";
 import { OwnerCard } from "@/components/listings/owner-card";
 import { MobileCTABar } from "@/components/listings/mobile-cta-bar";
+import { getOwnerProfile } from "@/app/actions/trust";
+import { TrustBadges } from "@/components/listings/trust-badges";
+import { ReviewSection } from "@/components/listings/review-section";
+import { ReportListingButton } from "@/components/listings/report-listing-button";
+import { ViewTracker } from "@/components/listings/view-tracker";
 export async function generateMetadata({
   params,
 }: {
@@ -51,15 +56,22 @@ export default async function ListingDetailPage({
     { data: listing, error },
     savedListingIds,
     { data: { user } },
+    { data: reviews },
   ] = await Promise.all([
     supabase.from("listings").select("*").eq("id", id).single(),
     getSavedListingIds(),
     supabase.auth.getUser(),
+    supabase
+      .from("listing_reviews")
+      .select("*")
+      .eq("listing_id", id)
+      .order("created_at", { ascending: false }),
   ]);
 
   if (error || !listing) notFound();
   const isSaved = savedListingIds?.includes(listing.id) ?? false;
   const isOwner = user?.id === listing.user_id;
+  const profile = await getOwnerProfile(listing.user_id);
 
   const imageUrls = (listing.image_urls ?? []).map((url: string) =>
     url.startsWith("http") ? url : getPublicUrlFromFullPath(url)
@@ -89,6 +101,7 @@ export default async function ListingDetailPage({
         >
           ← Back to search
         </Link>
+        <ViewTracker listingId={listing.id} />
 
         {/* Full-width hero gallery */}
         <div className="relative -mx-4 sm:mx-0 sm:rounded-2xl sm:overflow-hidden sm:border sm:border-zinc-200 dark:sm:border-zinc-800">
@@ -119,6 +132,9 @@ export default async function ListingDetailPage({
               </span>
               <span className="mx-2 text-zinc-400">·</span>
               <span className="text-zinc-600 dark:text-zinc-400">{listing.area}</span>
+              <div className="mt-3">
+                <TrustBadges verifiedListing={listing.verified_listing} ownerProfile={profile} />
+              </div>
 
               <h1 className="mt-3 text-2xl font-semibold text-zinc-900 dark:text-zinc-50 sm:text-3xl">
                 {listing.title}
@@ -140,6 +156,25 @@ export default async function ListingDetailPage({
               <p className="mt-3 whitespace-pre-wrap text-zinc-700 dark:text-zinc-300">
                 {listing.description}
               </p>
+              <div className="mt-5 flex flex-wrap gap-4 text-sm text-zinc-600 dark:text-zinc-300">
+                <span>{listing.views_count} views</span>
+                <span>{listing.saved_count} saved</span>
+                <span>{listing.contacted_count} contacted</span>
+                {listing.views_count > 50 ? <span>Trending listing</span> : null}
+                <span>
+                  {new Date(listing.created_at).toLocaleDateString() === new Date().toLocaleDateString()
+                    ? "Recently listed"
+                    : "Listed earlier"}
+                </span>
+              </div>
+            </div>
+            <div className="mt-6">
+              <ReviewSection
+                listingId={listing.id}
+                ownerUserId={listing.user_id}
+                reviews={reviews ?? []}
+                canReview={Boolean(user && !isOwner)}
+              />
             </div>
           </div>
 
@@ -172,10 +207,16 @@ export default async function ListingDetailPage({
               {/* Owner card + contact form */}
               {showContact && (
                 <div id="contact-form">
+                  <div className="mb-4">
+                    <ReportListingButton listingId={listing.id} />
+                  </div>
                   <OwnerCard
                     listingId={listing.id}
                     listingTitle={listing.title}
                     showContactForm={true}
+                    ownerId={listing.user_id}
+                    ownerName={profile?.display_name ?? undefined}
+                    ownerProfile={profile}
                   />
                 </div>
               )}

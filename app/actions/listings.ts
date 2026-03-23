@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { ListingInsert, ListingUpdate } from "@/types/database";
+import { ensureOwnerProfile } from "@/app/actions/trust";
 
 export async function createListing(formData: FormData) {
   const supabase = await createClient();
@@ -55,6 +56,7 @@ export async function createListing(formData: FormData) {
     .single();
 
   if (error) return { error: error.message };
+  await ensureOwnerProfile(user.id);
   revalidatePath("/dashboard/listings");
   revalidatePath("/dashboard");
   return { data: { id: data.id }, error: null };

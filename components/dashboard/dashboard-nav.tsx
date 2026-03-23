@@ -6,7 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import { useAuth } from "@/lib/auth/auth-context";
 import { Button } from "@/components/ui/button";
 
-export function DashboardNav({ user }: { user: User }) {
+export function DashboardNav({ user, isAdmin }: { user: User; isAdmin?: boolean }) {
   const router = useRouter();
   const { signOut } = useAuth();
 
@@ -52,6 +52,20 @@ export function DashboardNav({ user }: { user: User }) {
           >
             Leads
           </Link>
+          <Link
+            href="/dashboard/trust"
+            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Trust
+          </Link>
+          {isAdmin && (
+            <Link
+              href="/dashboard/admin"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-4">
           <span className="text-sm text-zinc-600 dark:text-zinc-400" title={user.email ?? undefined}>
