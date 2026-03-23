@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Listing } from "@/types/database";
 import type { SearchParams, SortOption } from "@/types/search";
@@ -12,7 +11,7 @@ export interface SearchResult {
   totalPages: number;
 }
 
-export const searchListings = unstable_cache(async function searchListings(
+export async function searchListings(
   params: SearchParams = {}
 ): Promise<SearchResult> {
   const supabase = await createClient();
@@ -22,9 +21,7 @@ export const searchListings = unstable_cache(async function searchListings(
     .from("listings")
     .select(
       "id, title, description, price, property_type, area, bedrooms, bathrooms, furnished, image_urls, user_id, owner_phone, owner_whatsapp, verified_listing, verification_notes, status, views_count, saved_count, contacted_count, reported_count, most_recent_view_at, created_at, updated_at",
-      {
-      count: "exact",
-    }
+      { count: "exact" }
     )
     .in("status", ["active", "flagged"]);
 
@@ -32,6 +29,7 @@ export const searchListings = unstable_cache(async function searchListings(
   if (params.minPrice != null && params.minPrice > 0) {
     query = query.gte("price", params.minPrice);
   }
+
   if (params.maxPrice != null && params.maxPrice > 0) {
     query = query.lte("price", params.maxPrice);
   }
@@ -62,6 +60,7 @@ export const searchListings = unstable_cache(async function searchListings(
 
   // Sorting
   const sort = params.sort ?? "newest";
+
   switch (sort) {
     case "price_asc":
       query = query.order("price", { ascending: true });
@@ -95,4 +94,4 @@ export const searchListings = unstable_cache(async function searchListings(
     page,
     totalPages,
   };
-}, ["search-listings-cache"], { revalidate: 60 });
+}
