@@ -10,12 +10,12 @@ export interface ButtonProps
 
 const variantStyles = {
   primary:
-    "bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-foreground",
+    "bg-[rgb(var(--accent))] text-white hover:bg-[rgb(var(--accent))]/90 focus-visible:ring-[rgb(var(--accent))]",
   secondary:
     "bg-zinc-200 text-zinc-900 dark:bg-zinc-700 dark:text-zinc-100 hover:bg-zinc-300 dark:hover:bg-zinc-600",
   outline:
-    "border-2 border-foreground bg-transparent hover:bg-foreground/5 dark:hover:bg-white/5",
-  ghost: "hover:bg-zinc-100 dark:hover:bg-zinc-800",
+    "border-2 border-border bg-transparent text-foreground hover:bg-muted/70",
+  ghost: "text-foreground hover:bg-muted/70",
   danger:
     "bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500",
 };

@@ -8,7 +8,8 @@ export interface InputProps
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className = "", error, label, id: idProp, ...props }, ref) => {
-    const id = idProp ?? React.useId();
+    const reactId = React.useId();
+    const id = idProp ?? reactId;
     return (
       <div className="w-full">
         {label && (

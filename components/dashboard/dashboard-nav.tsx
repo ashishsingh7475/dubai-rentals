@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { useAuth } from "@/lib/auth/auth-context";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export function DashboardNav({ user, isAdmin }: { user: User; isAdmin?: boolean }) {
   const router = useRouter();
@@ -27,6 +28,12 @@ export function DashboardNav({ user, isAdmin }: { user: User; isAdmin?: boolean 
             className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
           >
             Dashboard
+          </Link>
+          <Link
+            href="/dashboard/profile"
+            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+          >
+            Profile
           </Link>
           <Link
             href="/search"
@@ -68,6 +75,7 @@ export function DashboardNav({ user, isAdmin }: { user: User; isAdmin?: boolean 
           )}
         </nav>
         <div className="flex items-center gap-4">
+          <ThemeToggle />
           <span className="text-sm text-zinc-600 dark:text-zinc-400" title={user.email ?? undefined}>
             {displayEmail}
           </span>

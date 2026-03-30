@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { DashboardNav } from "@/components/dashboard/dashboard-nav";
 import { isAdminUser } from "@/lib/auth/admin";
+import { SiteHeader } from "@/components/nav/site-header";
 
 export default async function DashboardLayout({
   children,
@@ -19,7 +19,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      <DashboardNav user={user} isAdmin={isAdminUser(user)} />
+      <SiteHeader isAdmin={isAdminUser(user)} maxWidthClassName="max-w-5xl" />
       <main className="mx-auto max-w-5xl px-4 py-8 sm:px-6">{children}</main>
     </div>
   );

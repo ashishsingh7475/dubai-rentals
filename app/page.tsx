@@ -1,41 +1,78 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { MotionDiv, fadeInUp } from "@/components/motion/motion";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 px-4 py-16 dark:bg-zinc-950 sm:px-6">
-      <main className="flex max-w-2xl flex-col items-center gap-10 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-4xl">
+    <div className="relative min-h-screen overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(80%_60%_at_20%_10%,rgba(99,102,241,0.18),transparent_60%),radial-gradient(80%_60%_at_80%_20%,rgba(236,72,153,0.14),transparent_60%)] dark:bg-[radial-gradient(80%_60%_at_20%_10%,rgba(129,140,248,0.16),transparent_60%),radial-gradient(80%_60%_at_80%_20%,rgba(244,114,182,0.12),transparent_60%)]" />
+      <div className="pointer-events-none absolute -left-24 -top-24 h-[520px] w-[520px] rounded-full bg-[rgb(var(--accent))] opacity-[0.06] blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-24 h-[620px] w-[620px] rounded-full bg-[rgb(var(--accent-2))] opacity-[0.06] blur-3xl" />
+
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6 sm:px-6">
+        <Link href="/" className="text-sm font-semibold tracking-tight">
           Dubai Rentals
-        </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400">
-          Find your next rental in Dubai. Sign in or create an account to get
-          started.
-        </p>
-        <div className="flex flex-col gap-4 sm:flex-row">
-          <Link
-            href="/login"
-            className="inline-flex h-12 items-center justify-center rounded-xl bg-foreground px-6 font-medium text-background transition-colors hover:bg-foreground/90"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="inline-flex h-12 items-center justify-center rounded-xl border-2 border-foreground px-6 font-medium transition-colors hover:bg-foreground/5 dark:hover:bg-white/5"
-          >
-            Create account
-          </Link>
-          <Link
-            href="/search"
-            className="inline-flex h-12 items-center justify-center rounded-xl border border-zinc-300 px-6 font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            Browse rentals
-          </Link>
-          <Link
-            href="/dashboard"
-            className="inline-flex h-12 items-center justify-center rounded-xl border border-zinc-300 px-6 font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-600 dark:text-zinc-300 dark:hover:bg-zinc-800"
-          >
-            Dashboard
-          </Link>
+        </Link>
+        <ThemeToggle className="bg-card/70 backdrop-blur" />
+      </header>
+
+      <main className="mx-auto flex max-w-6xl flex-col items-center px-4 py-14 sm:px-6">
+        <MotionDiv {...fadeInUp} className="w-full max-w-3xl text-center">
+          <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground sm:text-6xl">
+            Find a place in Dubai that feels like home.
+          </h1>
+          <p className="mt-5 text-pretty text-lg text-muted-foreground sm:text-xl">
+            A clean, modern rental experience with verified trust signals, fast
+            search, and a profile that looks as polished as an Instagram page.
+          </p>
+
+          <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
+            <Link
+              href="/search"
+              className="inline-flex h-12 items-center justify-center rounded-2xl bg-foreground px-6 text-sm font-semibold text-background shadow-sm transition hover:bg-foreground/90"
+            >
+              Browse rentals
+            </Link>
+            <Link
+              href="/login"
+              className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-card/60 px-6 text-sm font-semibold text-card-foreground backdrop-blur transition hover:bg-card"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/signup"
+              className="inline-flex h-12 items-center justify-center rounded-2xl border border-border bg-card/40 px-6 text-sm font-semibold text-card-foreground backdrop-blur transition hover:bg-card"
+            >
+              Create account
+            </Link>
+          </div>
+        </MotionDiv>
+
+        <div className="mt-14 grid w-full max-w-5xl gap-4 sm:grid-cols-3">
+          {[
+            {
+              title: "Trust-first profiles",
+              body: "Verified signals, clean identity, and public owner pages that feel premium.",
+            },
+            {
+              title: "Responsive everywhere",
+              body: "Mobile-first layouts, touch-friendly controls, and readable spacing.",
+            },
+            {
+              title: "Smooth motion",
+              body: "Subtle animations that feel modern without distracting from listings.",
+            },
+          ].map((c) => (
+            <div
+              key={c.title}
+              className="rounded-3xl border border-border bg-card/60 p-6 shadow-sm backdrop-blur"
+            >
+              <p className="text-sm font-semibold text-card-foreground">
+                {c.title}
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{c.body}</p>
+            </div>
+          ))}
         </div>
       </main>
     </div>
